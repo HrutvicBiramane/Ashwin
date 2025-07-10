@@ -1,0 +1,221 @@
+# =================================================================
+# FreshCart Backend Application Configuration
+# =================================================================
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_trace_param
+
+spring:
+  application:
+    name: freshcart-backend
+
+  # ===============================
+  # H2 Database Configuration
+  # ===============================
+  datasource:
+    url: jdbc:h2:mem:freshcart;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: freshcart2024
+    hikari:
+      pool-name: FreshCartHikariPool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 20000
+      leak-detection-threshold: 60000
+
+  # ===============================
+  # JPA/Hibernate Configuration
+  # ===============================
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 20
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+
+  # ===============================
+  # H2 Console Configuration
+  # ===============================
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+        trace: false
+
+  # ===============================
+  # Security Configuration
+  # ===============================
+  security:
+    oauth2:
+      client:
+        registration: {}
+
+  # ===============================
+  # Mail Configuration (for notifications)
+  # ===============================
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:freshcart.noreply@gmail.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+  # ===============================
+  # Jackson Configuration
+  # ===============================
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: NON_NULL
+
+  # ===============================
+  # Actuator Configuration
+  # ===============================
+  actuator:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics,env
+        base-path: /actuator
+    endpoint:
+      health:
+        show-details: when-authorized
+
+# =================================================================
+# Application-specific Configuration
+# =================================================================
+freshcart:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:freshCartSecretKeyForJWTTokenGenerationAndValidation2024!@#$%^&*()1234567890}
+      expiration: 86400000  # 24 hours in milliseconds
+      refresh-expiration: 604800000  # 7 days in milliseconds
+    cors:
+      allowed-origins: 
+        - http://localhost:4200
+        - http://localhost:3000
+        - https://freshcart-frontend.vercel.app
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+        - OPTIONS
+      allowed-headers:
+        - "*"
+      allow-credentials: true
+      max-age: 3600
+
+  # File upload configuration
+  upload:
+    max-file-size: 10MB
+    max-request-size: 50MB
+    upload-dir: ${UPLOAD_DIR:./uploads}
+
+  # Business logic configuration
+  business:
+    default-currency: USD
+    tax-rate: 0.08  # 8% tax rate
+    free-shipping-threshold: 50.00
+    max-cart-items: 100
+    order-expiry-days: 30
+
+# =================================================================
+# Logging Configuration
+# =================================================================
+logging:
+  level:
+    com.freshcart.backend: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/freshcart-backend.log
+    max-size: 100MB
+    max-history: 30
+
+# =================================================================
+# Management Configuration
+# =================================================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers,env
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# =================================================================
+# Development Profile Specific Configuration
+# =================================================================
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  h2:
+    console:
+      settings:
+        web-allow-others: true
+logging:
+  level:
+    root: INFO
+    com.freshcart.backend: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    show-sql: false
+  h2:
+    console:
+      enabled: false
+logging:
+  level:
+    root: WARN
+    com.freshcart.backend: INFO
