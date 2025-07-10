@@ -1,0 +1,116 @@
+<!-- Main App Layout -->
+<div class="app-container">
+  <!-- Header Navigation -->
+  <header class="app-header">
+    <nav class="navbar">
+      <div class="nav-container">
+        <!-- Logo -->
+        <div class="nav-brand">
+          <a routerLink="/" class="brand-link">
+            <h1>🛒 FreshCart</h1>
+          </a>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="nav-search">
+          <input 
+            type="text" 
+            placeholder="Search for products..." 
+            class="search-input"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+          />
+          <button class="search-btn" (click)="onSearch()">🔍</button>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <div class="nav-menu">
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+          <a routerLink="/products" routerLinkActive="active">Products</a>
+          
+          <!-- User Menu -->
+          <div class="user-menu" *ngIf="!isLoggedIn">
+            <a routerLink="/login" class="login-btn">Login</a>
+            <a routerLink="/register" class="register-btn">Register</a>
+          </div>
+          
+          <!-- Logged in User Menu -->
+          <div class="user-menu" *ngIf="isLoggedIn">
+            <a routerLink="/cart" class="cart-link">
+              🛒 Cart ({{cartItemCount}})
+            </a>
+            <div class="dropdown">
+              <button class="user-btn">👤 {{userName}}</button>
+              <div class="dropdown-content">
+                <a routerLink="/profile">Profile</a>
+                <a routerLink="/orders">My Orders</a>
+                <a routerLink="/admin" *ngIf="isAdmin">Admin</a>
+                <a href="#" (click)="logout()">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <!-- Loading Indicator -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="spinner">Loading...</div>
+    </div>
+    
+    <!-- Toast Notifications -->
+    <div class="toast-container">
+      <div 
+        *ngFor="let toast of toasts" 
+        class="toast" 
+        [ngClass]="'toast-' + toast.type"
+      >
+        {{toast.message}}
+        <button (click)="removeToast(toast)" class="toast-close">×</button>
+      </div>
+    </div>
+    
+    <!-- Router Outlet for Page Content -->
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>FreshCart</h3>
+        <p>Your trusted grocery shopping partner</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a routerLink="/products">Products</a></li>
+          <li><a routerLink="/about">About Us</a></li>
+          <li><a routerLink="/contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Shipping Info</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Connect With Us</h4>
+        <div class="social-links">
+          <a href="#">📘 Facebook</a>
+          <a href="#">📷 Instagram</a>
+          <a href="#">🐦 Twitter</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 FreshCart. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

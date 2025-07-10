@@ -1,0 +1,1 @@
+import { Component } from '@angular/core'; @Component({ selector: 'app-product-detail', template: '<div class="page-container"><h1>Product detail</h1><p>This page is under construction.</p></div>', styles: ['.page-container { padding: 2rem; text-align: center; }'] }) export class ProductdetailComponent { }

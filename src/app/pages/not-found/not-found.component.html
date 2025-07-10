@@ -1,0 +1,40 @@
+<!-- 404 Not Found Page -->
+<div class="not-found-container">
+  <div class="not-found-content">
+    <!-- 404 Icon -->
+    <div class="error-icon">
+      <span class="error-number">404</span>
+      <div class="error-emoji">🛒💔</div>
+    </div>
+    
+    <!-- Error Message -->
+    <div class="error-message">
+      <h1>Oops! Page Not Found</h1>
+      <p>
+        The page you're looking for seems to have gone shopping and hasn't returned yet. 
+        Don't worry, we'll help you find what you need!
+      </p>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="error-actions">
+      <button class="btn btn-primary" (click)="goHome()">
+        🏠 Go to Homepage
+      </button>
+      <button class="btn btn-outline" (click)="goBack()">
+        ← Go Back
+      </button>
+    </div>
+    
+    <!-- Helpful Links -->
+    <div class="helpful-links">
+      <h3>Maybe you're looking for:</h3>
+      <ul>
+        <li><a routerLink="/">🏠 Homepage</a></li>
+        <li><a routerLink="/products">🛍️ Products</a></li>
+        <li><a routerLink="/cart">🛒 Shopping Cart</a></li>
+        <li><a routerLink="/login">🔐 Login</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
